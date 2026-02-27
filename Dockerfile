@@ -10,7 +10,7 @@ RUN git clone --depth 1 https://github.com/frappe/frappe_docker.git /frappe_dock
 # --------------- Stage 2: Base image -------------------------
 ARG PYTHON_VERSION=3.11.9
 ARG DEBIAN_BASE=bookworm
-FROM python:${PYTHON_VERSION}-slim-${DEBIAN_BASE} AS base
+FROM python:3.11.9-slim-bookworm
 
 COPY --from=frappe_docker /frappe_docker/resources/core/nginx/nginx-template.conf /templates/nginx/frappe.conf.template
 COPY --from=frappe_docker /frappe_docker/resources/core/nginx/nginx-entrypoint.sh /usr/local/bin/nginx-entrypoint.sh
