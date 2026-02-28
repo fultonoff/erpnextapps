@@ -72,6 +72,9 @@ RUN useradd -ms /bin/bash frappe \
 # --------------- Stage 3: Builder ----------------------------
 FROM base AS builder
 
+# Set environment to disable UV for better stability with complex apps
+ENV BENCH_USE_UV=0
+
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
  wget \
@@ -96,6 +99,7 @@ RUN apt-get update \
  gcc \
  build-essential \
  libbz2-dev \
+ libmagic-dev \
  && rm -rf /var/lib/apt/lists/*
 
 # Fix permissions for apps.json
