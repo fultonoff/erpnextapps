@@ -119,21 +119,23 @@ RUN bench init \
 
 WORKDIR /home/frappe/frappe-bench
 
-# Install apps sequentially with --skip-assets to save memory and handle large app lists
-RUN bench get-app --branch version-15 erpnext --skip-assets && \
-    bench get-app --branch version-15 payments --skip-assets && \
-    bench get-app --branch version-15 hrms --skip-assets && \
-    bench get-app --branch main print_designer --skip-assets && \
-    bench get-app --branch main webshop --skip-assets && \
-    bench get-app --branch main builder --skip-assets && \
-    bench get-app --branch main helpdesk --skip-assets && \
-    bench get-app https://github.com/lavaloon-eg/ksa_compliance --branch master --skip-assets && \
-    bench get-app https://github.com/assemmarwan/frappe_attachment_preview --branch main --skip-assets && \
-    bench get-app --branch main drive --skip-assets && \
-    bench get-app https://github.com/shridarpatil/frappe_whatsapp --branch master --skip-assets && \
-    bench get-app --branch version-3 insights --skip-assets && \
-    bench get-app --branch main ecommerce_integrations --skip-assets && \
-    echo "{}" > sites/common_site_config.json && \
+# Install apps sequentially with granular layers for better debugging and caching
+RUN bench get-app https://github.com/frappe/erpnext --branch version-15 --skip-assets
+RUN bench get-app https://github.com/frappe/payments --branch version-15 --skip-assets
+RUN bench get-app https://github.com/frappe/hrms --branch version-15 --skip-assets
+RUN bench get-app https://github.com/frappe/print_designer --branch develop --skip-assets
+RUN bench get-app https://github.com/frappe/webshop --branch develop --skip-assets
+RUN bench get-app https://github.com/frappe/builder --branch develop --skip-assets
+RUN bench get-app https://github.com/frappe/helpdesk --branch develop --skip-assets
+RUN bench get-app https://github.com/lavaloon-eg/ksa_compliance --branch master --skip-assets
+RUN bench get-app https://github.com/assemmarwan/frappe_attachment_preview --branch main --skip-assets
+RUN bench get-app https://github.com/frappe/drive --branch develop --skip-assets
+RUN bench get-app https://github.com/shridarpatil/frappe_whatsapp --branch master --skip-assets
+RUN bench get-app https://github.com/frappe/insights --branch version-3 --skip-assets
+RUN bench get-app https://github.com/frappe/ecommerce_integrations --branch develop --skip-assets
+
+# Final common config and cleanup
+RUN echo "{}" > sites/common_site_config.json && \
     find apps -mindepth 1 -path "*/.git" | xargs rm -fr
 
 # --------------- Stage 4: Production image -------------------

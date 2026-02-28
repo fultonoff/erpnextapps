@@ -13,19 +13,19 @@
   },
   {
     "url": "https://github.com/frappe/print_designer",
-    "branch": "main"
+    "branch": "develop"
   },
   {
     "url": "https://github.com/frappe/webshop",
-    "branch": "main"
+    "branch": "develop"
   },
   {
     "url": "https://github.com/frappe/builder",
-    "branch": "main"
+    "branch": "develop"
   },
   {
     "url": "https://github.com/frappe/helpdesk",
-    "branch": "main"
+    "branch": "develop"
   },
   {
     "url": "https://github.com/lavaloon-eg/ksa_compliance",
@@ -37,7 +37,7 @@
   },
   {
     "url": "https://github.com/frappe/drive",
-    "branch": "main"
+    "branch": "develop"
   },
   {
     "url": "https://github.com/shridarpatil/frappe_whatsapp",
@@ -49,6 +49,6 @@
   },
   {
     "url": "https://github.com/frappe/ecommerce_integrations",
-    "branch": "main"
+    "branch": "develop"
   }
 ]
