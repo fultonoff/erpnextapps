@@ -98,25 +98,43 @@ RUN apt-get update \
  libbz2-dev \
  && rm -rf /var/lib/apt/lists/*
 
-# Copy and encode apps.json
-COPY apps.json /opt/frappe/apps.json
+# Fix permissions for apps.json
+RUN mkdir -p /opt/frappe && chown -R frappe:frappe /opt/frappe
+COPY --chown=frappe:frappe apps.json /opt/frappe/apps.json
 
 USER frappe
 
 ARG FRAPPE_BRANCH=version-15
 ARG FRAPPE_PATH=https://github.com/frappe/frappe
+
+# Initialize bench with ONLY frappe first (More stable)
 RUN bench init \
- --apps_path=/opt/frappe/apps.json \
  --frappe-branch=${FRAPPE_BRANCH} \
  --frappe-path=${FRAPPE_PATH} \
  --no-procfile \
  --no-backups \
  --skip-redis-config-generation \
  --verbose \
- /home/frappe/frappe-bench && \
- cd /home/frappe/frappe-bench && \
- echo "{}" > sites/common_site_config.json && \
- find apps -mindepth 1 -path "*/.git" | xargs rm -fr
+ /home/frappe/frappe-bench
+
+WORKDIR /home/frappe/frappe-bench
+
+# Install apps sequentially to save memory and handle large app lists
+RUN bench get-app --branch version-15 erpnext && \
+    bench get-app --branch version-15 payments && \
+    bench get-app --branch version-15 hrms && \
+    bench get-app --branch main print_designer && \
+    bench get-app --branch main webshop && \
+    bench get-app --branch main builder && \
+    bench get-app --branch main helpdesk && \
+    bench get-app --branch master ksa_compliance && \
+    bench get-app --branch main frappe_attachment_preview && \
+    bench get-app --branch main drive && \
+    bench get-app --branch master frappe_whatsapp && \
+    bench get-app --branch version-3 insights && \
+    bench get-app --branch main ecommerce_integrations && \
+    echo "{}" > sites/common_site_config.json && \
+    find apps -mindepth 1 -path "*/.git" | xargs rm -fr
 
 # --------------- Stage 4: Production image -------------------
 FROM base AS backend
