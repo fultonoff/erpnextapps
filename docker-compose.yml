@@ -31,7 +31,8 @@ services:
     volumes:
       - redis-socketio-data:/data
 
-  erpnext-app:
+  # Renamed to 'frontend' for Dokploy compatibility
+  frontend:
     image: custom-erpnext:latest
     environment:
       - DB_HOST=db
@@ -48,13 +49,13 @@ services:
     image: custom-erpnext:latest
     command: bench worker --queue default
     depends_on:
-      - erpnext-app
+      - frontend
 
   erpnext-scheduler:
     image: custom-erpnext:latest
     command: bench scheduler
     depends_on:
-      - erpnext-app
+      - frontend
 
 volumes:
   db-data:
