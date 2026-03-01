@@ -4,7 +4,6 @@ USER frappe
 WORKDIR /home/frappe/frappe-bench
 
 # Install custom apps
-RUN bench get-app --resolve-deps https://github.com/ERPGulf/zatca_erpgulf
 RUN bench get-app --resolve-deps https://github.com/frappe/frappe_attachment_preview
 RUN bench get-app --resolve-deps https://github.com/frappe/drive
 RUN bench get-app --resolve-deps https://github.com/frappe/frappe_whatsapp
