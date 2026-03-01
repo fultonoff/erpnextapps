@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   db:
     image: mariadb:10.6
@@ -33,6 +31,9 @@ services:
 
   # Renamed to 'frontend' for Dokploy compatibility
   frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: custom-erpnext:latest
     environment:
       - DB_HOST=db
@@ -46,12 +47,18 @@ services:
       - assets:/home/frappe/frappe-bench/sites/assets
 
   erpnext-worker-default:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: custom-erpnext:latest
     command: bench worker --queue default
     depends_on:
       - frontend
 
   erpnext-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: custom-erpnext:latest
     command: bench scheduler
     depends_on:
