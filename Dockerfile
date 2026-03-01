@@ -1,12 +1,16 @@
 FROM frappe/erpnext:v15.0.0
 
+USER frappe
+WORKDIR /home/frappe/frappe-bench
+
 # Install custom apps
-RUN install-app zatca_erpgulf https://github.com/ERPGulf/zatca_erpgulf
-RUN install-app frappe_attachment_preview https://github.com/frappe/frappe_attachment_preview
-RUN install-app drive https://github.com/frappe/drive
-RUN install-app frappe_whatsapp https://github.com/frappe/frappe_whatsapp
-RUN install-app insights https://github.com/frappe/insights
-RUN install-app ecommerce_integrations https://github.com/frappe/ecommerce_integrations
+RUN bench get-app --resolve-deps https://github.com/ERPGulf/zatca_erpgulf
+RUN bench get-app --resolve-deps https://github.com/frappe/frappe_attachment_preview
+RUN bench get-app --resolve-deps https://github.com/frappe/drive
+RUN bench get-app --resolve-deps https://github.com/frappe/frappe_whatsapp
+RUN bench get-app --resolve-deps https://github.com/frappe/insights
+RUN bench get-app --resolve-deps https://github.com/frappe/ecommerce_integrations
 
 # Finalize image
-USER frappe
+# Note: Apps are installed in the image, but you still need to 
+# run 'bench --site your-site install-app app_name' after deployment.
